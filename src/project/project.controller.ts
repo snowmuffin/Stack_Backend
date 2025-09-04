@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectService } from './project.service';
 
@@ -10,5 +17,10 @@ export class ProjectController {
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateProjectDto) {
     return this.service.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.service.findAll();
   }
 }

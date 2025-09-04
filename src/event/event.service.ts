@@ -21,4 +21,8 @@ export class EventService {
     });
     return await this.repo.save(entity);
   }
+
+  async findAll(): Promise<Event[]> {
+    return this.repo.find({ order: { createdAt: 'DESC' } });
+  }
 }

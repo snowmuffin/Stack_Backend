@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
@@ -10,5 +17,10 @@ export class EventController {
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateEventDto) {
     return this.service.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.service.findAll();
   }
 }

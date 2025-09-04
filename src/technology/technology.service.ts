@@ -22,4 +22,8 @@ export class TechnologyService {
     });
     return await this.repo.save(entity);
   }
+
+  async findAll(): Promise<Technology[]> {
+    return this.repo.find({ order: { createdAt: 'DESC' } });
+  }
 }

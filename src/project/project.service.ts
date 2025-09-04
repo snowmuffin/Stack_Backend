@@ -41,4 +41,11 @@ export class ProjectService {
     });
     return await this.projectRepo.save(entity);
   }
+
+  async findAll(): Promise<Project[]> {
+    return this.projectRepo.find({
+      relations: { technologies: true },
+      order: { createdAt: 'DESC' },
+    });
+  }
 }

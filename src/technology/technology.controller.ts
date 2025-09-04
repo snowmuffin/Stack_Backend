@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { CreateTechnologyDto } from './dto/create-technology.dto';
 import { TechnologyService } from './technology.service';
 
@@ -10,5 +17,10 @@ export class TechnologyController {
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateTechnologyDto) {
     return this.service.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.service.findAll();
   }
 }
