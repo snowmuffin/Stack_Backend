@@ -8,7 +8,7 @@ const dataSourceOptions: DataSourceOptions = {
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'postgres',
-  entities: ['src/**/*.entity.ts'],
+  entities: ['src/entities/*.ts'],
   migrations: ['src/migrations/*.ts'],
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
