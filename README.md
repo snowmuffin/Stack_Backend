@@ -1,98 +1,283 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Stack Backend (NestJS + TypeORM)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A lightweight portfolio API built with NestJS and TypeORM on PostgreSQL. It manages three core resources:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Events (timeline items)
+- Technologies (skills with category and proficiency)
+- Projects (with many-to-many technologies)
 
-## Description
+The API uses validation (class-validator), DTOs, and a global ValidationPipe for safe inputs.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- NestJS 11 with structured modules and DTO-based validation
+- TypeORM with PostgreSQL
+- Environment-based configuration (development/production)
+- Entities include timestamps and relations
+- Ready-to-use migration scripts
 
-```bash
-$ npm install
-```
+## Tech Stack
 
-## Compile and run the project
+- Runtime: Node.js (TypeScript)
+- Framework: NestJS
+- ORM: TypeORM
+- DB: PostgreSQL
+- Validation: class-validator / class-transformer
+- Tooling: ESLint, Prettier, Jest
 
-```bash
-# development
-$ npm run start
+## Project Structure
 
-# watch mode
-$ npm run start:dev
+- `src/main.ts` – Bootstrap with global ValidationPipe
+- `src/app.module.ts` – App wiring and TypeORM connection
+- `src/entities/*` – TypeORM entities (`Event`, `Project`, `Technology`)
+- `src/{event,project,technology}` – Modules with Controller/Service/DTO
+- `src/data-source.ts` – DataSource config for TypeORM CLI/migrations
 
-# production mode
-$ npm run start:prod
-```
+## Environment Variables
 
-## Run tests
+Copy `.env.example` to `.env` and adjust values:
 
-```bash
-# unit tests
-$ npm run test
+- `NODE_ENV` – `development` or `production`
+- `PORT` – default `3000`
+- `BIND_HOST` – default `127.0.0.1`
+- `DB_HOST` – database host, default `localhost`
+- `DB_PORT` – database port, default `5432`
+- `DB_USERNAME` – database user, default `postgres`
+- `DB_PASSWORD` – database password, default `password`
+- `DB_NAME` – database name, default `postgres`
 
-# e2e tests
-$ npm run test:e2e
+Notes:
 
-# test coverage
-$ npm run test:cov
-```
+- In production, SSL is enabled with `{ rejectUnauthorized: false }`.
+- In development, `synchronize` and `logging` are enabled; prefer migrations for shared environments.
 
-## Deployment
+## Getting Started
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1) Prerequisites
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Node.js 18+ and npm
+- PostgreSQL 13+
+
+2) Install dependencies
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+3) Configure database
 
-## Resources
+- Create the database specified by `DB_NAME`.
+- Option A (quick dev): set `NODE_ENV=development` to use TypeORM synchronize.
+- Option B (recommended): create and run a migration (see below).
 
-Check out a few resources that may come in handy when working with NestJS:
+4) Run the server
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+# Development (watch)
+npm run start:dev
 
-## Support
+# Or standard start
+npm start
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The server binds to `BIND_HOST:PORT` (defaults to `127.0.0.1:3000`).
 
-## Stay in touch
+## TypeORM Migrations
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Generate an initial migration after entities are in place:
+
+```bash
+# Creates src/migrations/Migration-<timestamp>.ts based on current schema
+npm run migration:generate
+
+# Run migrations
+npm run migration:run
+
+# Revert last migration
+npm run migration:revert
+```
+
+These commands use `src/data-source.ts` for configuration.
+
+## API Overview
+
+Base URL: `http://<BIND_HOST>:<PORT>` (default `http://127.0.0.1:3000`)
+
+### Health
+
+- GET `/` → returns a simple string: `"This is a portfolio API"`
+
+### Events
+
+- POST `/events`
+	- Body
+		- `title` string (required)
+		- `description` string (required)
+		- `location` string (required)
+		- `occurTime` ISO date string (required)
+		- `imageUrl` URL string (optional)
+	- 201 Created → Event
+
+- GET `/events`
+	- 200 OK → Event[] (sorted newest first)
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:3000/events \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"title": "Joined Company X",
+		"description": "Started as backend engineer",
+		"location": "Seoul",
+		"occurTime": "2024-06-01T09:00:00.000Z"
+	}'
+```
+
+Event entity:
+
+```ts
+{
+	id: number,
+	title: string,
+	description: string,
+	location: string,
+	occurTime: string, // ISO
+	imageUrl?: string,
+	createdAt: string,
+	updatedAt: string
+}
+```
+
+### Technologies
+
+- POST `/technologies`
+	- Body
+		- `name` string (required, unique)
+		- `slug` string (required, unique)
+		- `category` enum (required): `frontend|backend|mobile|devops|database|cloud|data|ai`
+		- `description` string (optional)
+		- `proficiency` enum (optional, default `familiar`): `learning|familiar|intermediate|advanced|expert`
+		- `iconUrl` URL string (optional)
+	- 201 Created → Technology
+
+- GET `/technologies`
+	- 200 OK → Technology[]
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:3000/technologies \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"name": "NestJS",
+		"slug": "nestjs",
+		"category": "backend",
+		"proficiency": "advanced"
+	}'
+```
+
+Technology entity:
+
+```ts
+{
+	id: number,
+	name: string,
+	slug: string,
+	category: 'frontend'|'backend'|'mobile'|'devops'|'database'|'cloud'|'data'|'ai',
+	description?: string,
+	proficiency: 'learning'|'familiar'|'intermediate'|'advanced'|'expert',
+	iconUrl?: string,
+	createdAt: string,
+	updatedAt: string
+}
+```
+
+### Projects
+
+- POST `/projects`
+	- Body
+		- `name` string (required)
+		- `description` string (required)
+		- `url` string (required)
+		- `repo` string (required)
+		- `slug` string (required)
+		- `technologyIds` number[] (optional) – references existing technologies
+		- `imageUrl` URL string (optional)
+	- 201 Created → Project
+	- Notes: If any `technologyIds` are missing, you get 404 with the missing IDs.
+
+- GET `/projects`
+	- 200 OK → Project[] with `technologies` relation
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:3000/projects \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"name": "Portfolio Site",
+		"description": "Personal portfolio website",
+		"url": "https://me.example.com",
+		"repo": "https://github.com/user/portfolio",
+		"slug": "portfolio-site",
+		"technologyIds": [1,2]
+	}'
+```
+
+Project entity:
+
+```ts
+{
+	id: number,
+	name: string,
+	description: string,
+	url: string,
+	repo: string,
+	slug: string,
+	imageUrl?: string,
+	technologies: Technology[],
+	createdAt: string,
+	updatedAt: string
+}
+```
+
+## Validation & Errors
+
+- Requests are validated by DTOs with class-validator.
+- The global `ValidationPipe` uses:
+	- `whitelist: true` (unknown fields are stripped)
+	- `forbidNonWhitelisted: true` (rejects unknown fields)
+	- `transform: true` (auto-converts basic types when possible)
+
+Example invalid field error:
+
+```json
+{
+	"statusCode": 400,
+	"message": ["property x should not exist"],
+	"error": "Bad Request"
+}
+```
+
+## Scripts
+
+- `npm run start` – start app
+- `npm run start:dev` – dev with watch
+- `npm run build` – compile to `dist/`
+- `npm run lint` – ESLint with fixes
+- `npm run format` – Prettier write
+- `npm test` – unit tests (Jest)
+- `npm run test:e2e` – e2e tests
+- `npm run migration:*` – TypeORM migrations (generate/run/revert)
+
+## Notes
+
+- The default root route `/` returns a plain string for a quick health check.
+- When moving to production, disable `synchronize` (do not rely on it) and use migrations.
+- Consider adding authentication and pagination if you plan to expose this publicly.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+UNLICENSED (private project). Update as needed.
+
